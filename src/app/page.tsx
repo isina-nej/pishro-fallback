@@ -1,21 +1,22 @@
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import StaticErrorDisplay from '@/components/StaticErrorDisplay';
 
-export const dynamic = 'force-dynamic';
+function PageContent() {
+  const searchParams = useSearchParams();
+  const statusCode = searchParams.get('code') || '500';
 
-interface PageProps {
-  searchParams: Promise<{ code?: string }>;
+  return <StaticErrorDisplay statusCode={statusCode} />;
 }
 
-export default async function Page({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const statusCode = params.code || '500';
-
+export default function Page() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
       <div className="max-w-2xl w-full">
-        <Suspense fallback={null}>
-          <StaticErrorDisplay statusCode={statusCode} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <PageContent />
         </Suspense>
       </div>
     </main>
