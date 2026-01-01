@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#001a4d">
+    <title>خطا | Pishro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #001a4d 0%, #003366 50%, #1a1a2e 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Background animations using CSS only */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+        }
+        
+        .shape1 {
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: #0066cc;
+            animation: float1 6s ease-in-out infinite;
+        }
+        
+        .shape2 {
+            bottom: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: #d4a574;
+            animation: float2 8s ease-in-out infinite;
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .content {
+            text-align: center;
+            max-width: 600px;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            space-y: 24px;
+        }
+        
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .error-box {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .message {
+            font-size: 18px;
+            line-height: 1.8;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        .help-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .timestamp {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+    </div>
+    
+    <div class="container">
+        <div class="content">
+            <span class="icon" id="icon">⚡</span>
+            
+            <div class="error-box">
+                <h1 id="code">500</h1>
+                <h2 id="titleFa">خطای داخلی سرور</h2>
+            </div>
+            
+            <p class="message" id="messageFa">سرور با خطای غیرمنتظره‌ای مواجه شد.</p>
+            
+            <div class="info-box">
+                <div>اطلاعات درخواست:</div>
+                <div class="timestamp">
+                    <div>Status: <span id="statusDisplay">500</span></div>
+                    <div id="timestamp" style="margin-top: 8px;"></div>
+                </div>
+            </div>
+            
+            <div class="help-box">
+                <strong>درخواست خود را بعداً تکرار کنید یا با پشتیبانی تماس بگیرید.</strong>
+                <br>
+                <small>Please try again later or contact our support team.</small>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Error configurations
+        const configs = {
+            '400': { titleFa: 'درخواست نادرست', messageFa: 'سرور نتوانست درخواست شما را درک کند.', icon: '❌' },
+            '401': { titleFa: 'عدم اجازه دسترسی', messageFa: 'برای دسترسی به این منبع، احراز هویت لازم است.', icon: '🔐' },
+            '403': { titleFa: 'ممنوع', messageFa: 'شما اجازه دسترسی به این منبع را ندارید.', icon: '🚫' },
+            '404': { titleFa: 'صفحه یافت نشد', messageFa: 'صفحه‌ای که دنبال می‌گردید وجود ندارد.', icon: '🔍' },
+            '408': { titleFa: 'زمان درخواست پایان یافت', messageFa: 'زمان انجام درخواست شما تمام شد.', icon: '⏱️' },
+            '429': { titleFa: 'درخواست‌های بیش از حد', messageFa: 'شما تعداد درخواست‌های بیش‌ازحدی در مدت کوتاهی ارسال کرده‌اید.', icon: '⚠️' },
+            '500': { titleFa: 'خطای داخلی سرور', messageFa: 'سرور با خطای غیرمنتظره‌ای مواجه شد.', icon: '⚡' },
+            '501': { titleFa: 'پیاده‌سازی نشده', messageFa: 'این ویژگی هنوز بر روی سرور پیاده‌سازی نشده است.', icon: '🔨' },
+            '502': { titleFa: 'درگاه نادرست', messageFa: 'پاسخ نادرست از سرور بالادستی.', icon: '🔗' },
+            '503': { titleFa: 'سرویس در دسترس نیست', messageFa: 'سرور به‌طور موقتی برای نگهداری و تعمیر خاموش است.', icon: '🔄' },
+            '504': { titleFa: 'زمان انتظار درگاه تمام شد', messageFa: 'سرور بالادستی به‌موقع پاسخ نداد.', icon: '⏳' },
+        };
+        
+        // Get status code from URL
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code') || '500';
+        const config = configs[code] || configs['500'];
+        
+        // Update page content
+        document.getElementById('code').textContent = code;
+        document.getElementById('statusDisplay').textContent = code;
+        document.getElementById('titleFa').textContent = config.titleFa;
+        document.getElementById('messageFa').textContent = config.messageFa;
+        document.getElementById('icon').textContent = config.icon;
+        
+        // Update timestamp
+        const now = new Date();
+        document.getElementById('timestamp').innerHTML = 
+            `Timestamp: ${now.toISOString()}<br>Time: ${now.toLocaleTimeString('fa-IR')}`;
+    </script>
+</body>
+</html>
