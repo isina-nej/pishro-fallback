@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 import StaticErrorDisplay from '@/components/StaticErrorDisplay';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   searchParams: Promise<{ code?: string }>;
 }
