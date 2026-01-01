@@ -1,37 +1,21 @@
-'use client';
+import { Suspense } from 'react';
+import StaticErrorDisplay from '@/components/StaticErrorDisplay';
 
-import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import ErrorDisplay from '@/components/ErrorDisplay';
-import StatusChecker from '@/components/StatusChecker';
+interface PageProps {
+  searchParams: Promise<{ code?: string }>;
+}
 
-function PageContent() {
-  const searchParams = useSearchParams();
-  const statusCode = searchParams.get('code') || '500';
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null;
-  }
+export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const statusCode = params.code || '500';
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
       <div className="max-w-2xl w-full">
-        <ErrorDisplay statusCode={statusCode} />
-        <StatusChecker statusCode={statusCode} />
+        <Suspense fallback={null}>
+          <StaticErrorDisplay statusCode={statusCode} />
+        </Suspense>
       </div>
     </main>
-  );
-}
-
-export default function Page() {
-  return (
-    <Suspense fallback={null}>
-      <PageContent />
-    </Suspense>
   );
 }
